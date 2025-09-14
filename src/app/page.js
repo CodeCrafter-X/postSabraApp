@@ -1,3 +1,6 @@
+'use client';
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link';
 import PaginatedNoticeList from '@/components/PaginatedNoticeList';
 import TopImageCarousel from '@/components/TopImageCarousel';
