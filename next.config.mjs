@@ -1,18 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configure API routes for file uploads
-  api: {
-    // Increase body size limit for file uploads (10MB)
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-    // Response size limit
-    responseLimit: '10mb',
-  },
-
-  // Webpack configuration to handle file system modules properly
+  reactStrictMode: true,
+  swcMinify: true,
+  
   webpack: (config, { isServer }) => {
-    // Client-side configuration: don't polyfill fs module
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -21,11 +12,9 @@ const nextConfig = {
         os: false,
       };
     }
-    
     return config;
   },
 
-  // Images configuration for local uploads
   images: {
     remotePatterns: [
       {
