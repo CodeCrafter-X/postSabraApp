@@ -9,24 +9,30 @@ export default function Home() {
   const [notices, setNotices] = useState([]);
   const [importantNotices, setImportantNotices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        // Remove the revalidate option and use a standard fetch
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/notices`, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setNotices(data.notices || []);
-          setImportantNotices((data.notices || []).filter(notice => notice.important));
-        } else {
-          console.error('Failed to fetch notices:', res.status);
+        setLoading(true);
+        setError(null);
+        
+        // Use absolute URL for API request
+        const baseUrl = window.location.origin;
+        const res = await fetch(`${baseUrl}/api/notices`);
+        
+        if (!res.ok) {
+          throw new Error(`Failed to fetch notices: ${res.status} ${res.statusText}`);
         }
-      } catch (error) {
-        console.error('Error fetching notices:', error);
+        
+        const data = await res.json();
+        console.log('Fetched notices:', data);
+        
+        setNotices(data.notices || []);
+        setImportantNotices((data.notices || []).filter(notice => notice.important));
+      } catch (err) {
+        console.error('Error fetching notices:', err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -45,6 +51,30 @@ export default function Home() {
           <TopImageCarousel />
         </div>
         <div className="text-center py-8">Loading notices...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-10">
+        <h1 className="text-4xl font-bold text-green-700 mb-10 text-center">
+          University Notice Board
+        </h1>
+        <div className="pt-0 pb-30">
+          <TopImageCarousel />
+        </div>
+        <div className="text-center py-8 text-red-500">
+          Error: {error}
+          <div className="mt-4">
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -103,7 +133,7 @@ export default function Home() {
           href="/notices"
           className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-xl shadow-md hover:bg-green-700 transition-all"
         >
-          View All Notices 
+          View All Notices here
         </Link>
       </div>
     </div>
