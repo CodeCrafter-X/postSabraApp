@@ -1,38 +1,61 @@
 'use client';
-export const dynamic = 'force-dynamic';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PaginatedNoticeList from '@/components/PaginatedNoticeList';
 import TopImageCarousel from '@/components/TopImageCarousel';
 
-export default async function Home() {
-  let notices = [];
-  let importantNotices = [];
+export default function Home() {
+  const [notices, setNotices] = useState([]);
+  const [importantNotices, setImportantNotices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/notices`, {
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
-    });
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/notices`, {
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-    if (res.ok) {
-      const data = await res.json();
-      notices = data.notices || [];
-      importantNotices = notices.filter(notice => notice.important);
-    }
-  } catch (error) {
-    console.error('Error fetching notices:', error);
+        if (res.ok) {
+          const data = await res.json();
+          setNotices(data.notices || []);
+          setImportantNotices((data.notices || []).filter(notice => notice.important));
+        }
+      } catch (error) {
+        console.error('Error fetching notices:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotices();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-10">
+        <h1 className="text-4xl font-bold text-green-700 mb-10 text-center">
+          University Notice Board
+        </h1>
+        <div className="pt-0 pb-30">
+          <TopImageCarousel />
+        </div>
+        <div className="text-center py-8">Loading notices...</div>
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto px-4 py-10">
-      
       <h1 className="text-4xl font-bold text-green-700 mb-10 text-center">
         University Notice Board
       </h1>
       <div className="pt-0 pb-30">
-      <TopImageCarousel />
-       </div>
+        <TopImageCarousel />
+      </div>
+      
       {/* Latest Notices */}
       <section className="mb-16">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b-2 border-green-500 pb-2">
