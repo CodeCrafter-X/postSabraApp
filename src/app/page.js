@@ -101,7 +101,7 @@ export default function Home() {
           href="/notices"
           className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-xl shadow-md hover:bg-green-700 transition-all"
         >
-          View All Notices 
+          View All Notices Here
         </Link>
       </div>
     </div>
