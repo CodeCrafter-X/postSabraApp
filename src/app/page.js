@@ -13,8 +13,8 @@ export default function Home() {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
+        // Remove the revalidate option and use a standard fetch
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/notices`, {
-          cache: 'no-store',
           headers: { 'Content-Type': 'application/json' },
         });
 
@@ -22,6 +22,8 @@ export default function Home() {
           const data = await res.json();
           setNotices(data.notices || []);
           setImportantNotices((data.notices || []).filter(notice => notice.important));
+        } else {
+          console.error('Failed to fetch notices:', res.status);
         }
       } catch (error) {
         console.error('Error fetching notices:', error);
@@ -101,7 +103,7 @@ export default function Home() {
           href="/notices"
           className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-xl shadow-md hover:bg-green-700 transition-all"
         >
-          View All Notices Here
+          View All Notices 
         </Link>
       </div>
     </div>
