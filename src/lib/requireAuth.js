@@ -18,7 +18,7 @@ export async function getUserFromRequest(req) {
     await connectDB();
     const user = await User.findById(payload.userId).select('-passwordHash');
     
-    if (!user || user.status !== 'active') {
+    if (!user || !['active', 'approve'].includes(user.status)) {
       console.log('User not found or inactive');
       return null;
     }

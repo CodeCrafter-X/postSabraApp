@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ALL_NOTICE_CATEGORIES } from "@/lib/noticeCategories";
 
 const noticeSchema = new mongoose.Schema(
   {
@@ -12,7 +13,8 @@ const noticeSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: true
+      required: true,
+      enum: ALL_NOTICE_CATEGORIES,
     },
     attachments: [{
       name: String,

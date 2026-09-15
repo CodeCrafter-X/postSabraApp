@@ -13,7 +13,7 @@ export async function GET(req){
       });
     
    }
-   await connectDB;
+  await connectDB();
    const notices = await Notice.find()
          .populate('postedBy', 'username category email')
          .sort({ createdAt: -1 });

@@ -9,6 +9,8 @@ export default function RegisterPage() {
     email: '',
     password: '',
     category: '',
+    role: 'poster',
+    adminKey: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -153,6 +155,39 @@ export default function RegisterPage() {
               <option value="Surgery">Surgery</option>
             </select>
           </div>
+
+          <div>
+            <label htmlFor="role" className="block text-sm font-semibold text-gray-700">
+              Account type
+            </label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 transition-all duration-200"
+            >
+              <option value="poster">Poster</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+
+          {formData.role === 'admin' && (
+            <div>
+              <label htmlFor="adminKey" className="block text-sm font-semibold text-gray-700">
+                Admin registration key
+              </label>
+              <input
+                type="password"
+                id="adminKey"
+                name="adminKey"
+                value={formData.adminKey}
+                onChange={handleChange}
+                className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-green-400 focus:border-green-400 transition-all duration-200"
+                required
+              />
+            </div>
+          )}
 
           <button
             type="submit"

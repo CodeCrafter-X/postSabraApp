@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import TopImageCarousel from '@/components/TopImageCarousel';
+import { CAMPUS_MAP_URL } from '@/lib/noticeCategories';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -70,6 +71,9 @@ export default function ContactPage() {
                     P.O. Box 02, Belihuloya<br />
                     70140, Sri Lanka
                   </p>
+                  <a href={CAMPUS_MAP_URL} target="_blank" rel="noreferrer" className="mt-2 inline-block text-sm font-semibold text-green-700 hover:text-green-900">
+                    Open campus location in Google Maps ↗
+                  </a>
                 </div>
               </div>
 

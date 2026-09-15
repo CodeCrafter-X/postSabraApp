@@ -1,5 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import { NOTICE_CATEGORY_GROUPS } from '@/lib/noticeCategories';
 
 export default function SearchBar() {
   const router = useRouter();
@@ -38,13 +39,11 @@ export default function SearchBar() {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Categories</option>
-            <option value="Academic">Academic</option>
-            <option value="Administrative">Administrative</option>
-            <option value="Event">Event</option>
-            <option value="Exam">Exam</option>
-            <option value="Holiday">Holiday</option>
-            <option value="Job">Job Opportunity</option>
-            <option value="Scholarship">Scholarship</option>
+            {NOTICE_CATEGORY_GROUPS.map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.options.map((category) => <option key={category} value={category}>{category}</option>)}
+              </optgroup>
+            ))}
           </select>
         </div>
         <button

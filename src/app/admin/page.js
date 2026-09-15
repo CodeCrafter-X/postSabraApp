@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { FiArrowRight, FiCheck, FiClipboard, FiFileText, FiUsers, FiX } from 'react-icons/fi';
 
 export default function AdminDashboard() {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -62,162 +63,37 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-green-100 p-6">
-      <h1 className="text-3xl font-extrabold text-gray-800 mb-8 text-center">
-        Admin Dashboard
-      </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Sidebar */}
-        <div className="md:col-span-1">
-          <div className="backdrop-blur-md bg-white/70 p-6 rounded-2xl shadow-lg">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">
-              Admin Menu
-            </h2>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/admin"
-                  className="block px-4 py-2 rounded-lg text-gray-700 font-medium hover:bg-green-100 hover:text-green-700 transition cursor-default"
-                >
-                  Pending Requests
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin/manage-user"
-                  className="block px-4 py-2 rounded-lg text-gray-700 font-medium hover:bg-green-100 hover:text-green-700 transition"
-                >
-                  Manage Users
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin/manage-notice"
-                  className="block px-4 py-2 rounded-lg text-gray-700 font-medium hover:bg-green-100 hover:text-green-700 transition"
-                >
-                  Manage Notices
-                </Link>
-              </li>
-            </ul>
-          </div>
+    <div className="page-shell dashboard-grid px-5 py-8 lg:px-8 lg:py-10">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div><p className="section-kicker">Administration / Overview</p><h1 className="mt-2 text-4xl font-black tracking-[-0.04em] text-[#17231f]">Good morning, admin.</h1><p className="mt-2 text-[#687570]">Keep the university notice board accurate and up to date.</p></div>
+          <div className="rounded-full border border-[#cfe2d5] bg-white px-4 py-2 text-sm font-semibold text-[#087f5b]"><span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#2c9a71]" />System operational</div>
         </div>
 
-        {/* Main Content */}
-        <div className="md:col-span-2">
-          <div className="backdrop-blur-md bg-white/80 p-8 rounded-2xl shadow-xl">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6 border-b pb-2">
-              Pending Poster Requests
-            </h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[[FiClipboard, 'Review queue', pendingRequests.length, 'Awaiting decision'], [FiUsers, 'User directory', '—', 'Manage accounts'], [FiFileText, 'Notice archive', '—', 'Published updates']].map(([Icon, label, value, sub]) => (
+            <div key={label} className="rounded-2xl border border-[#dfe7e1] bg-white p-5 shadow-[0_8px_24px_rgba(23,35,31,0.04)]"><div className="flex items-start justify-between"><span className="rounded-xl bg-[#e8f4ee] p-3 text-xl text-[#087f5b]"><Icon /></span><span className="text-3xl font-black text-[#17231f]">{value}</span></div><p className="mt-5 font-bold text-[#17231f]">{label}</p><p className="mt-1 text-sm text-[#687570]">{sub}</p></div>
+          ))}
+        </div>
 
-            {error && (
-              <div className="mb-4 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg text-center font-medium">
-                {error}
-              </div>
-            )}
+        <div className="mt-6 grid gap-6 lg:grid-cols-[220px_1fr]">
+          <aside className="rounded-2xl border border-[#dfe7e1] bg-[#07543f] p-3 text-white shadow-[0_12px_30px_rgba(7,84,63,0.14)]">
+            <p className="px-3 pb-3 pt-2 text-xs font-bold uppercase tracking-[0.14em] text-[#b9e4c9]">Workspace</p>
+            <div className="space-y-1">
+              <Link href="/admin" className="flex items-center justify-between rounded-xl bg-white/12 px-3 py-3 text-sm font-bold"><span className="flex items-center gap-3"><FiClipboard /> Requests</span><span>{pendingRequests.length}</span></Link>
+              <Link href="/admin/manage-user" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#d7eee0] transition hover:bg-white/10"><FiUsers /> Users</Link>
+              <Link href="/admin/manage-notice" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#d7eee0] transition hover:bg-white/10"><FiFileText /> Notices</Link>
+            </div>
+          </aside>
 
-            {loading ? (
-              <div className="text-center py-10">
-                <p className="text-gray-500 animate-pulse">Loading requests...</p>
-              </div>
-            ) : pendingRequests.length === 0 ? (
-              <div className="text-center py-10 bg-gray-50 rounded-xl shadow">
-                <p className="text-gray-600 text-lg">No pending requests 🎉</p>
-              </div>
-            ) : (
-              <>
-                <div className="overflow-x-auto rounded-xl shadow">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-green-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wider">
-                          Username
-                        </th>
-                        <th className="px-6 py-3 text-left text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wider">
-                          Email
-                        </th>
-                        <th className="px-6 py-3 text-left text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wider">
-                          Department
-                        </th>
-                        <th className="px-6 py-3 text-center text-sm md:text-lg font-semibold text-gray-600 uppercase tracking-wider">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-100 text-lg">
-                      {currentRequests.map((user, idx) => (
-                        <tr
-                          key={user._id}
-                          className={`hover:bg-gray-50 transition ${
-                            idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
-                          }`}
-                        >
-                          <td className="px-6 py-4 font-medium text-gray-900">{user.username}</td>
-                          <td className="px-6 py-4 text-gray-700">{user.email}</td>
-                          <td className="px-6 py-4 text-gray-700">{user.category}</td>
-                          <td className="px-6 py-4 text-center flex gap-3 justify-center">
-                            <button
-                              onClick={() => handleApprove(user._id)}
-                              className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition cursor-pointer disabled:opacity-50"
-                            >
-                              Approve
-                            </button>
-                            <button
-                              onClick={() => handleReject(user._id)}
-                              className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition cursor-pointer disabled:opacity-50"
-                            >
-                              Reject
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Pagination Navigation */}
-                <div className="flex justify-center mt-6 space-x-2">
-                  <button
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className={`px-3 py-2 rounded-lg font-medium transition ${
-                      currentPage === 1
-                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-green-100 hover:text-green-700 cursor-pointer'
-                    }`}
-                  >
-                    &lt;&lt; Previous
-                  </button>
-
-                  {getPageNumbers().map((num) => (
-                    <button
-                      key={num}
-                      onClick={() => setCurrentPage(num)}
-                      className={`px-4 py-2 rounded-lg font-medium ${
-                        currentPage === num
-                          ? 'bg-green-600 text-white'
-                          : 'bg-white text-gray-700 border border-gray-300 hover:bg-green-100 hover:text-green-700'
-                      } cursor-pointer`}
-                    >
-                      {num}
-                    </button>
-                  ))}
-
-                  <button
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className={`px-3 py-2 rounded-lg font-medium transition ${
-                      currentPage === totalPages
-                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-green-100 hover:text-green-700 cursor-pointer'
-                    }`}
-                  >
-                    Next &gt;&gt;
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+          <section className="min-w-0 rounded-2xl border border-[#dfe7e1] bg-white p-5 shadow-[0_8px_24px_rgba(23,35,31,0.04)] sm:p-7">
+            <div className="flex flex-col justify-between gap-3 border-b border-[#dfe7e1] pb-5 sm:flex-row sm:items-end"><div><p className="section-kicker">Needs your attention</p><h2 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#17231f]">Poster requests</h2></div><p className="text-sm text-[#687570]">{pendingRequests.length} pending</p></div>
+            {error && <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">{error}</div>}
+            {loading ? <div className="py-16 text-center text-sm text-[#687570]">Loading review queue...</div> : pendingRequests.length === 0 ? <div className="my-6 rounded-xl bg-[#f5f7f4] px-5 py-14 text-center"><FiCheck className="mx-auto text-3xl text-[#087f5b]" /><p className="mt-3 font-bold text-[#17231f]">All caught up</p><p className="mt-1 text-sm text-[#687570]">There are no poster requests waiting for review.</p></div> : <>
+              <div className="mt-5 overflow-x-auto"><table className="min-w-full text-left"><thead><tr className="border-b border-[#dfe7e1] text-xs uppercase tracking-[0.1em] text-[#687570]"><th className="px-3 py-3 font-bold">Applicant</th><th className="px-3 py-3 font-bold">Department</th><th className="px-3 py-3 text-right font-bold">Decision</th></tr></thead><tbody>{currentRequests.map((user) => <tr key={user._id} className="border-b border-[#edf1ed] last:border-0"><td className="px-3 py-4"><p className="font-bold text-[#17231f]">{user.username}</p><p className="mt-1 text-sm text-[#687570]">{user.email}</p></td><td className="px-3 py-4 text-sm text-[#34463f]">{user.category || 'General'}</td><td className="px-3 py-4"><div className="flex justify-end gap-2"><button onClick={() => handleApprove(user._id)} title="Approve request" className="inline-flex items-center gap-2 rounded-lg bg-[#087f5b] px-3 py-2 text-sm font-bold text-white transition hover:bg-[#07543f]"><FiCheck /> <span className="hidden sm:inline">Approve</span></button><button onClick={() => handleReject(user._id)} title="Reject request" className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-700 transition hover:bg-red-50"><FiX /> <span className="hidden sm:inline">Reject</span></button></div></td></tr>)}</tbody></table></div>
+              <div className="mt-5 flex items-center justify-between border-t border-[#dfe7e1] pt-4"><p className="text-xs text-[#687570]">Page {currentPage} of {Math.max(totalPages, 1)}</p><div className="flex gap-2"><button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="rounded-lg border border-[#dfe7e1] px-3 py-2 text-sm font-bold text-[#34463f] disabled:cursor-not-allowed disabled:opacity-40">Previous</button><button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="rounded-lg border border-[#dfe7e1] px-3 py-2 text-sm font-bold text-[#34463f] disabled:cursor-not-allowed disabled:opacity-40">Next <FiArrowRight className="ml-1 inline" /></button></div></div>
+            </>}
+          </section>
         </div>
       </div>
     </div>

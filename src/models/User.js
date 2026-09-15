@@ -24,7 +24,7 @@ role:{
 category:String, // e.g., "Medical Center", "Student Union"
 status:{
     type:String,
-    enum:["pending", "active", "rejected"],
+    enum:["pending", "active", "approve", "rejected"],
     default:"pending"
 },
 profilePicture:String}, // URL to the profile picture

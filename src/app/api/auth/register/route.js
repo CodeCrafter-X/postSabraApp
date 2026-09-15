@@ -12,7 +12,7 @@ export async function POST(req){
 
         await connectDB();
 
-    const {username, email, password, category} = await req.json();
+    const {username, email, password, category, role, adminKey} = await req.json();
 
      // Basic validation
      if(!username || !email || !password ){
@@ -20,9 +20,15 @@ export async function POST(req){
      }
 
       // Prevent duplicate email
-      User.findOne({email}).then(existingUser => {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
         return new Response(JSON.stringify({error:"Email already exists"}), {status:409});
-      })
+      }
+
+      const isAdminRegistration = role === "admin";
+      if (isAdminRegistration && (!process.env.ADMIN_REGISTRATION_KEY || adminKey !== process.env.ADMIN_REGISTRATION_KEY)) {
+        return new Response(JSON.stringify({error:"A valid admin registration key is required"}), {status:403});
+      }
 
       
     // Hash password before saving (bcrypt, cost 10)
@@ -34,8 +40,8 @@ export async function POST(req){
         email,
         passwordHash,
         category,
-        status:"pending", // Default status 
-        role:"poster" // Default role
+        status: isAdminRegistration ? "active" : "pending",
+        role: isAdminRegistration ? "admin" : "poster"
     })
     console.log("New user requested for creation:", user);
     return new Response(JSON.stringify({ message: "Request submitted. Wait for admin approval." }), { status: 201 });

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import NoticeList from '@/components/NoticeList';
 import TopImageCarousel from '@/components/TopImageCarousel';
+import { NOTICE_CATEGORY_GROUPS } from '@/lib/noticeCategories';
 
 export default function NoticesContent() {
   const searchParams = useSearchParams();
@@ -15,6 +16,11 @@ export default function NoticesContent() {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
   const noticesPerPage = 4;
+
+  useEffect(() => {
+    setSelectedCategory(searchParams.get('category') || 'All');
+    setCurrentPage(1);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchNotices = async () => {
@@ -40,7 +46,8 @@ export default function NoticesContent() {
       notice.content.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesCategory =
-      selectedCategory === 'All' || notice.category === selectedCategory;
+      selectedCategory === 'All' ||
+      notice.category?.trim().toLowerCase() === selectedCategory.trim().toLowerCase();
 
     return matchesSearch && matchesCategory;
   });
@@ -99,14 +106,11 @@ export default function NoticesContent() {
           className="w-full md:w-1/3 px-4 py-2 border rounded-lg shadow-sm bg-white focus:ring-2 focus:ring-green-500 focus:outline-none"
         >
           <option value="All">All Categories</option>
-          <option value="Academic">Academic</option>
-          <option value="Administrative">Administrative</option>
-          <option value="Event">Event</option>
-          <option value="Exam">Exam</option>
-          <option value="Holiday">Holiday</option>
-          <option value="Job">Job</option>
-          <option value="Scholarship">Scholarship</option>
-          <option value="Strike">Strike</option>
+          {NOTICE_CATEGORY_GROUPS.map((group) => (
+            <optgroup key={group.label} label={group.label}>
+              {group.options.map((category) => <option key={category} value={category}>{category}</option>)}
+            </optgroup>
+          ))}
         </select>
       </div>
 

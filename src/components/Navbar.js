@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
+import { FiChevronDown, FiGrid, FiLogOut, FiUser } from 'react-icons/fi';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -52,11 +53,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-green-600 text-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#07543f] text-white shadow-[0_4px_20px_rgba(7,84,63,0.12)]">
+      <div className="mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-6 px-5 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2 cursor-pointer">
-          <div className="relative h-12 w-12">
+        <Link href="/" className="flex shrink-0 items-center gap-3 cursor-pointer">
+          <div className="relative h-11 w-11 rounded-full bg-white/95 p-1">
             <Image
               src="/Logo-SUSL.png"
               alt="SUSL Logo"
@@ -65,18 +66,14 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="text-2xl font-bold tracking-wide hidden sm:inline-block">
-            SUSL~Notice
-          </span>
+          <span className="hidden text-xl font-bold tracking-[-0.02em] sm:inline-block">SUSL<span className="text-[#b9e4c9]">~</span>Notice</span>
         </Link>
 
         {/* Menu */}
-        <div className="flex items-center space-x-8 text-lg font-medium tracking-wide">
+        <div className="flex items-center gap-5 text-sm font-semibold tracking-wide sm:gap-8">
           <Link
             href="/notices"
-            className={`relative hover:text-green-200 transition after:block after:h-[2px] after:bg-white after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
-              pathname === '/notices' ? 'after:w-full font-semibold' : ''
-            } cursor-pointer`}
+            className={`rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-[#c9efd7] ${pathname === '/notices' ? 'bg-white/10 text-[#c9efd7]' : ''}`}
           >
             Notices
           </Link>
@@ -84,11 +81,11 @@ export default function Navbar() {
           {loading ? (
             <span>Loading...</span>
           ) : user ? (
-            <div className="flex items-center space-x-8">
+            <div className="flex items-center gap-3 sm:gap-5">
               {user.role === 'poster' && (
                 <Link
                   href="/post-notice"
-                  className="hover:text-green-200 transition relative after:block after:h-[2px] after:bg-white after:w-0 after:transition-all after:duration-300 hover:after:w-full cursor-pointer"
+                  className="hidden rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-[#c9efd7] sm:inline-flex"
                 >
                   Add Notice
                 </Link>
@@ -96,7 +93,7 @@ export default function Navbar() {
               {user.role === 'admin' && (
                 <Link
                   href="/admin"
-                  className="hover:text-green-200 transition relative after:block after:h-[2px] after:bg-white after:w-0 after:transition-all after:duration-300 hover:after:w-full cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#c9efd7] px-3 py-2 text-[#07543f] transition hover:bg-white"
                 >
                   Admin
                 </Link>
@@ -106,48 +103,36 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   ref={buttonRef}
-                  className="flex items-center space-x-1 focus:outline-none hover:text-green-200"
+                  className="flex items-center gap-2 rounded-full border border-white/20 px-3 py-2 transition hover:border-white/50 hover:bg-white/10"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   onMouseEnter={() => setIsDropdownOpen(true)}
                 >
                   <span>{user.username}</span>
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+                  <FiChevronDown className="h-4 w-4" />
                 </button>
 
                 {isDropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    className="absolute right-0 mt-2 w-40 bg-white text-gray-900 rounded-lg shadow-lg py-2 border border-gray-200 z-50"
+                    className="absolute right-0 mt-3 w-48 rounded-xl border border-[#dfe7e1] bg-white py-2 text-sm text-[#17231f] shadow-xl"
                     onMouseEnter={() => setIsDropdownOpen(true)}
                     onMouseLeave={() => setIsDropdownOpen(false)}
                   >
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 hover:bg-green-100 transition text-sm cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-2.5 transition hover:bg-[#e8f4ee]"
                       onClick={() => setIsDropdownOpen(false)}
                     >
-                      Profile
+                      <FiUser /> Profile
                     </Link>
                     <button
                       onClick={() => {
                         handleLogout();
                         setIsDropdownOpen(false);
                       }}
-                      className="block w-full text-left px-4 py-2 hover:bg-green-100 transition text-sm cursor-pointer"
+                      className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-[#e8f4ee]"
                     >
-                      Logout
+                      <FiLogOut /> Logout
                     </button>
                   </div>
                 )}
@@ -157,17 +142,13 @@ export default function Navbar() {
             <>
               <Link
                 href="/login"
-                className={`relative hover:text-green-200 transition after:block after:h-[2px] after:bg-white after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
-                  pathname === '/login' ? 'after:w-full font-semibold' : ''
-                } cursor-pointer`}
+                className="rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-[#c9efd7]"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className={`relative hover:text-green-200 transition after:block after:h-[2px] after:bg-white after:w-0 after:transition-all after:duration-300 hover:after:w-full ${
-                  pathname === '/register' ? 'after:w-full font-semibold' : ''
-                } cursor-pointer`}
+                className="rounded-full border border-white/30 px-4 py-2 transition hover:border-white hover:bg-white/10"
               >
                 Register
               </Link>

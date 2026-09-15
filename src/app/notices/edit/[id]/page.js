@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import { NOTICE_CATEGORY_GROUPS } from '@/lib/noticeCategories';
 
 export default function EditNoticePage() {
   const router = useRouter();
@@ -151,14 +152,11 @@ export default function EditNoticePage() {
             required
           >
             <option value="">Select category</option>
-            <option value="Academic">Academic</option>
-            <option value="Administrative">Administrative</option>
-            <option value="Event">Event</option>
-            <option value="Exam">Exam</option>
-            <option value="Holiday">Holiday</option>
-            <option value="Job">Job Opportunity</option>
-            <option value="Scholarship">Scholarship</option>
-            <option value="Strike">Strike</option>
+            {NOTICE_CATEGORY_GROUPS.map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.options.map((category) => <option key={category} value={category}>{category}</option>)}
+              </optgroup>
+            ))}
             <option value="Other">Other</option>
           </select>
 
