@@ -15,12 +15,6 @@ const ALLOWED_TYPES = [
   "text/plain"
 ];
 
-export const config = {
-  api: {
-    bodyParser: false, // must remain false for file uploads
-  },
-};
-
 export async function POST(request) {
   try {
     const formData = await request.formData();

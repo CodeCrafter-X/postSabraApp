@@ -2,6 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   
+  turbopack: {},
+
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
